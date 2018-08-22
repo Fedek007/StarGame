@@ -4,77 +4,106 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.geekbrains.stargame.base.ActionListener;
 import ru.geekbrains.stargame.base.Base2DScreen;
+import ru.geekbrains.stargame.math.Rect;
+import ru.geekbrains.stargame.screen.menu.ButtomNewGame;
+import ru.geekbrains.stargame.screen.menu.ButtonExit;
+import ru.geekbrains.stargame.screen.sprites.Background;
+import ru.geekbrains.stargame.screen.sprites.Star;
 
+/**
+ * Экран меню
+ */
 
-public class MenuScreen extends Base2DScreen {
+public class MenuScreen extends Base2DScreen implements ActionListener {
 
-    final static float SPEED = 1f;
-    SpriteBatch batch;
-    Texture img;
-    Texture img1;
-    Vector2 pos;
-    Vector2 v;
-    Vector2 touchPos;
-    Vector2 b;
+    private static final float BUTTON_PRESS_SCALE = 0.9f;
+    private static final float BUTTON_HEIGHT = 0.15f;
+
+    private Background background;
+    private Texture bgTexture;
+    private ButtonExit buttonExit;
+    private TextureAtlas atlas;
+    private ButtomNewGame buttomNewGame;
 
 
     public MenuScreen(Game game) {
         super(game);
     }
 
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        super.touchDown(screenX, screenY, pointer, button);
-        touchPos.set(screenX, Gdx.graphics.getHeight() - screenY);
-        v.set(touchPos.cpy().sub(pos).setLength(SPEED));
-        System.out.println("touchPos.x = " + touchPos.x + " touchPos.y = " + touchPos.y);
-        return false;
-    }
-
     @Override
     public void show() {
         super.show();
-        batch = new SpriteBatch();
-        img = new Texture("space.jpg");
-        img1 = new Texture("mario.png");
-        pos = new Vector2(0,0);
-        v = new Vector2();
-        touchPos = new Vector2();
-        b = new Vector2();
+        bgTexture = new Texture("spaceshooter.png");
+        background = new Background(new TextureRegion(bgTexture));
+        atlas = new TextureAtlas("textures/menuAtlas.tpack");
+        buttonExit = new ButtonExit(atlas, this, BUTTON_PRESS_SCALE);
+        buttonExit.setHeightProportion(BUTTON_HEIGHT);
+        buttomNewGame = new ButtomNewGame(atlas, this, BUTTON_PRESS_SCALE);
+        buttomNewGame.setHeightProportion(BUTTON_HEIGHT);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
+        update(delta);
+        draw();
+    }
+
+    public void draw() {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(img, 0, 0);
-        batch.draw(img1,pos.x,pos.y);
-        b.set(touchPos);
-        if(b.sub(pos).len()>SPEED) {
-            pos.add(v);
-        }else pos.set(touchPos);
+        background.draw(batch);
+        buttonExit.draw(batch);
+        buttomNewGame.draw(batch);
         batch.end();
+    }
+
+    public void update(float delta) {
+
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        batch.dispose();
-        img.dispose();
+        bgTexture.dispose();
+        atlas.dispose();
     }
 
-
+    @Override
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
+        background.resize(worldBounds);
+        buttonExit.resize(worldBounds);
+        buttomNewGame.resize(worldBounds);
+    }
 
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        super.touchUp(screenX, screenY, pointer, button);
-        return false;
+    public boolean touchDown(Vector2 touch, int pointer) {
+        buttonExit.touchDown(touch, pointer);
+        buttomNewGame.touchDown(touch, pointer);
+        return super.touchDown(touch, pointer);
+    }
+
+    @Override
+    public boolean touchUp(Vector2 touch, int pointer) {
+        buttonExit.touchUp(touch, pointer);
+        buttomNewGame.touchUp(touch, pointer);
+        return super.touchUp(touch, pointer);
+    }
+
+    @Override
+    public void actionPerformed(Object src) {
+        if (src == buttonExit) {
+            Gdx.app.exit();
+        } else if (src == buttomNewGame) {
+            game.setScreen(new GameScreen(game));
+        }
     }
 }
