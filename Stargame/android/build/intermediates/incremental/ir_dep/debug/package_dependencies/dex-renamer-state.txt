@@ -1,4 +1,4 @@
-#Sun Aug 12 17:34:45 MSK 2018
+#Fri Aug 24 16:37:25 MSK 2018
 base.0=C\:\\Users\\MaKKoC\\Desktop\\Stargame1\\Stargame\\android\\build\\intermediates\\transforms\\dexMerger\\debug\\10
 path.0=classes.dex
 renamed.0=classes.dex

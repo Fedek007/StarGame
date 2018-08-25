@@ -22,13 +22,16 @@ import ru.geekbrains.stargame.screen.sprites.Star;
 
 public class MenuScreen extends Base2DScreen implements ActionListener {
 
+    private static final int STAR_COUNT = 256;
+
     private static final float BUTTON_PRESS_SCALE = 0.9f;
     private static final float BUTTON_HEIGHT = 0.15f;
 
     private Background background;
     private Texture bgTexture;
-    private ButtonExit buttonExit;
     private TextureAtlas atlas;
+    private Star star[];
+    private ButtonExit buttonExit;
     private ButtomNewGame buttomNewGame;
 
 
@@ -39,9 +42,13 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     @Override
     public void show() {
         super.show();
-        bgTexture = new Texture("spaceshooter.png");
+        bgTexture = new Texture("textures/bg.png");
         background = new Background(new TextureRegion(bgTexture));
         atlas = new TextureAtlas("textures/menuAtlas.tpack");
+        star = new Star[STAR_COUNT];
+        for (int i = 0; i < star.length; i++) {
+            star[i] = new Star(atlas);
+        }
         buttonExit = new ButtonExit(atlas, this, BUTTON_PRESS_SCALE);
         buttonExit.setHeightProportion(BUTTON_HEIGHT);
         buttomNewGame = new ButtomNewGame(atlas, this, BUTTON_PRESS_SCALE);
@@ -58,15 +65,21 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     public void draw() {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         batch.begin();
         background.draw(batch);
+        for (int i = 0; i < star.length; i++) {
+            star[i].draw(batch);
+        }
         buttonExit.draw(batch);
         buttomNewGame.draw(batch);
         batch.end();
     }
 
     public void update(float delta) {
-
+        for (int i = 0; i < star.length; i++) {
+            star[i].update(delta);
+        }
     }
 
     @Override
@@ -80,6 +93,9 @@ public class MenuScreen extends Base2DScreen implements ActionListener {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
+        for (int i = 0; i < star.length; i++) {
+            star[i].resize(worldBounds);
+        }
         buttonExit.resize(worldBounds);
         buttomNewGame.resize(worldBounds);
     }

@@ -16,7 +16,7 @@ import ru.geekbrains.stargame.math.Rect;
  * Базовый класс для всех экранов
  */
 
-public class Base2DScreen implements Screen, InputProcessor {
+public class Base2DScreen implements Screen, InputProcessor{
 
     protected SpriteBatch batch;
 
