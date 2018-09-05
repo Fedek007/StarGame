@@ -9,7 +9,7 @@ public class Regions {
      * @param region регион
      * @param rows количество строк
      * @param cols количество столбцов
-     * @param frames количество фреймов
+     * @param frames количество фреймовEnemyEmitter
      * @return массив регионов
      */
     public static TextureRegion[] split(TextureRegion region, int rows, int cols, int frames) {
